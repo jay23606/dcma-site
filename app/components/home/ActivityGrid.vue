@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Card } from '~/types/content'
+const headingId = useId()
 defineProps<{ heading: string; activities: Card[]; email: string; }>()
 </script>
 
 <template>
-  <section class="grid" aria-labelledby="activities-heading">
-    <h2 id="activities-heading" class="display">{{ heading }}</h2>
+  <section class="grid" :aria-labelledby="headingId">
+    <h2 :id="headingId" class="display">{{ heading }}</h2>
     <div class="items">
       <article v-for="a in activities" :key="a._key">
         <img
