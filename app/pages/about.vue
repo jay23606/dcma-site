@@ -39,7 +39,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
     <div class="cards-wrapper">
       <details id="introduction" class="section-card" open>
         <summary class="card-summary">
-          <span class="card-title display">{{ page.introductionHeading }}</span>
+          <h2 class="card-title display">{{ page.introductionHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body prose">
@@ -49,7 +49,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="mission" class="section-card mission-card" open>
         <summary class="card-summary">
-          <span class="card-title display">{{ page.missionTitle }}</span>
+          <h2 class="card-title display">{{ page.missionTitle }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -59,7 +59,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="principles" class="section-card">
         <summary class="card-summary">
-          <span class="card-title display">{{ page.principlesHeading }}</span>
+          <h2 class="card-title display">{{ page.principlesHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -75,7 +75,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="norms-tldr" class="section-card">
         <summary class="card-summary">
-          <span class="card-title display">{{ page.shortNormsHeading }}</span>
+          <h2 class="card-title display">{{ page.shortNormsHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -88,7 +88,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="collective-norms" class="section-card">
         <summary class="card-summary">
-          <span class="card-title display">{{ page.collectiveNormsHeading }}</span>
+          <h2 class="card-title display">{{ page.collectiveNormsHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -104,7 +104,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="security" class="section-card">
         <summary class="card-summary">
-          <span class="card-title display">{{ page.securityHeading }}</span>
+          <h2 class="card-title display">{{ page.securityHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -126,7 +126,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 
       <details id="security-meetings" class="section-card">
         <summary class="card-summary">
-          <span class="card-title display">{{ page.securityMeetingsHeading }}</span>
+          <h2 class="card-title display">{{ page.securityMeetingsHeading }}</h2>
           <span class="card-chevron" aria-hidden="true" />
         </summary>
         <div class="card-body">
@@ -213,6 +213,7 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 }
 
 .card-title {
+  margin: 0;
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
   font-weight: 900;
   line-height: 1.15;
