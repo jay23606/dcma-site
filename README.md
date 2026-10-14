@@ -286,8 +286,8 @@ Where everything lives, so the project survives a change of maintainer. No secre
 
 | Thing | Where | Notes |
 | --- | --- | --- |
-| Code | GitHub `philorien/dcma-site` | Add a second admin under **Settings** → **Collaborators** |
-| Site hosting | Vercel project `dcma-site`, team `lorienwebs-projects` | Env vars live there; see [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the deploy flow and the not-yet-done DNS cutover from Wix |
+| Code | GitHub `philorien/dcma-site` (a personal account) | A personal-account repo has exactly one owner. Collaborators (**Settings** → **Collaborators**) can push and manage Actions secrets, but only the owner can change repo settings or transfer it. Handing over means transferring the repo (see below) |
+| Site hosting | Vercel project `dcma-site`, team `lorienwebs-projects` | Env vars live there; see [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the deploy flow and the not-yet-done DNS cutover from Wix. `lorienwebs-projects` is Lorien Web's team and holds other clients' projects, so hand over by transferring the project, not by adding people to the team |
 | CMS content and members | Sanity project `1qb86j9s` (Door County Mutual Aid), dataset `production` | Manage members at [sanity.io/manage](https://www.sanity.io/manage) → **Members**. A Sanity account belongs to its sign-in method (GitHub, Google, or email), so people must log in the way they were invited |
 | Hosted Studio | `dcma.sanity.studio` | Deployed by the `Deploy Studio` GitHub Action (see "Automatic deploys (CI)") or by hand |
 | Studio deploy token | Sanity API token "GitHub Actions - Studio deploy" (`deploy-studio` role), stored as the GitHub repo secret `SANITY_DEPLOY_TOKEN` | **Expires 2027-10-05.** Created from the original maintainer's Sanity login, which signs in with GitHub |
@@ -295,26 +295,29 @@ Where everything lives, so the project survives a change of maintainer. No secre
 
 ### Rotate the Studio deploy token
 
-Do this before the expiry date, or any time the token may have leaked or its owner leaves. You need to be a Sanity project administrator and a GitHub repo admin.
+Do this before the expiry date, or any time the token may have leaked or its owner leaves. You need to be a Sanity project administrator and the GitHub repo owner or a collaborator, with [`jq`](https://jqlang.org) installed.
 
 ```bash
 cd studio
 npx sanity login --provider github      # or the provider your account uses
-npx sanity tokens list                  # find the old token's id
-# Create the new token and store it as the repo secret without printing it:
-npx sanity tokens create "GitHub Actions - Studio deploy" --role=deploy-studio --expires-at 2028-01-01 --json --yes
-gh secret set SANITY_DEPLOY_TOKEN       # paste the new token's "token" value, or pipe it in
-npx sanity tokens delete <old-token-id> --yes
+npx sanity tokens list                  # note the old token's id
+# Create the new token and store it as the repo secret without printing it.
+# If the create step fails, nothing is stored and the old secret stays in place.
+NEW_TOKEN=$(npx sanity tokens create "GitHub Actions - Studio deploy" --role=deploy-studio --expires-at 2028-01-01 --json --yes | jq -er .token) \
+  && printf '%s' "$NEW_TOKEN" | gh secret set SANITY_DEPLOY_TOKEN
+unset NEW_TOKEN
 ```
 
-Then run **Deploy Studio** from the **Actions** tab to confirm the new token works, and update the expiry date in this README.
+Then run **Deploy Studio** from the **Actions** tab. Once it passes, delete the old token with `npx sanity tokens delete <old-token-id> --yes` and update the expiry date in this README. Deleting only after the new token works means a failed rotation never leaves CI without a working token.
 
 ### Handing the project to someone else
 
-1. Add the new maintainer as a GitHub repo admin, a Sanity project **Administrator**, and a member of the Vercel team.
-2. Rotate the deploy token (above) and the contact form write token so no credential depends on the person leaving. It has not been verified whether Sanity ties a token's validity to the member who created it, so rotating is the safe choice.
-3. Remove the old maintainer from all three.
-4. Check `npx sanity tokens list` and prune anything unrecognised.
+1. Make the new maintainer a Sanity project **Administrator**.
+2. Transfer the GitHub repo (**Settings** → **General** → **Danger Zone** → **Transfer ownership**) to the new maintainer's account, or better, to a GitHub organization DCMA owns. An organization can have several owners, so later handovers are just adding and removing people. Afterwards, check that the Vercel project's Git connection (**Settings** → **Git**) still points at the repo and reconnect it if not.
+3. Transfer the Vercel project to a Vercel team the new maintainer owns (project **Settings** → **General** → **Transfer Project**). Deployments, environment variables and domains move with it; integrations don't and must be re-added.
+4. Have the new maintainer rotate the deploy token (above) and the contact form write token so no credential depends on the person leaving. It has not been verified whether Sanity ties a token's validity to the member who created it, so rotating is the safe choice.
+5. Remove the old maintainer from the Sanity project, and as a GitHub collaborator if they were added.
+6. Check `npx sanity tokens list` and prune anything unrecognised.
 
 ---
 
@@ -328,8 +331,8 @@ Then run **Deploy Studio** from the **Actions** tab to confirm the new token wor
 | New CMS page missing from the sitemap | Rebuild — slugs are collected at build time in `nuxt.config.ts`. The page itself works without a rebuild. |
 | Studio CI (`Studio check` or `Deploy Studio`) fails with `Tsconfig not found .../.nuxt/tsconfig.app.json` | The Sanity CLI follows the repo-root `tsconfig.json`, which points at generated `.nuxt/tsconfig.*.json` files that exist only after `nuxt prepare`. On a clean checkout they're missing. The workflows run `pnpm install` first (its `postinstall` runs `nuxt prepare`); keep that step ahead of any `sanity` command. Locally: `pnpm exec nuxt prepare` |
 | Unsure whether it's `sanity schema validate` or `sanity schemas validate` | Both work on CLI 8.x (the singular is an alias). The canonical name is plural, `npx sanity schemas validate --level error`, and that's what CI runs |
-| `sanity login` fails with `Multiple login providers available` | Non-interactive shells (scripts, `!` commands in Claude Code) can't show the provider picker. Pass one: `npx sanity login --provider github`. Use the provider your Sanity account was created with; a different one signs you in as a separate, empty account |
-| `Unauthorized - Session not found` from `sanity deploy` in CI | `SANITY_DEPLOY_TOKEN` is wrong, revoked, or expired. See "Rotate the Studio deploy token" below |
+| `sanity login` fails with `Multiple login providers available` | Non-interactive shells (scripts, CI, or any shell without an interactive terminal) can't show the provider picker. Pass one: `npx sanity login --provider github`. Use the provider your Sanity account was created with; a different one signs you in as a separate, empty account |
+| `Unauthorized - Session not found` from `sanity deploy` in CI | `SANITY_DEPLOY_TOKEN` is wrong, revoked, or expired. See "Rotate the Studio deploy token" above |
 | `You must login first` from `sanity deploy` in CI | The secret is empty or the env var isn't passed. The deploy workflow checks for this first and fails with a clear message |
 | `Invalid role "..."` when creating a token | The CLI lists the roles this project allows in the error. As of 2026-10-05: `blueprints-deployer`, `viewer`, `access-manager`, `deploy-studio`, `editor`. Use `deploy-studio` for CI |
 | Studio deploy "succeeds" but the schema didn't update | `sanity deploy` only warns on a failed schema upload unless you pass `--schema-required` (CI does; keep it) |
