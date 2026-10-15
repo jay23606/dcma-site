@@ -4,6 +4,10 @@ import type { ContactFormCopy, SiteSettings } from '~/types/content'
 
 const props = defineProps<{ heading: string; formCopy: ContactFormCopy; settings: SiteSettings }>()
 
+const uid = useId()
+const headingId = `${uid}-heading`
+const errorId = (field: string) => `${uid}-err-${field}`
+
 const form = reactive({ firstName: '', lastName: '', email: '', subject: '', message: '', website: '' })
 const state = ref<'idle' | 'sending' | 'sent' | 'error'>('idle')
 const fieldErrors = ref<Partial<Record<keyof typeof form, string>>>({})
@@ -76,9 +80,9 @@ async function submit(event: Event) {
 </script>
 
 <template>
-  <section class="contact" aria-labelledby="contact-heading">
+  <section class="contact" :aria-labelledby="headingId">
     <header class="contact-intro">
-      <h2 id="contact-heading" class="display">{{ heading }}</h2>
+      <h2 :id="headingId" class="display">{{ heading }}</h2>
       <p class="reassurance">{{ formCopy.reassurance }}</p>
     </header>
 
@@ -91,10 +95,10 @@ async function submit(event: Event) {
               required
               autocomplete="given-name"
               :aria-invalid="!!fieldErrors.firstName"
-              :aria-describedby="fieldErrors.firstName ? 'err-firstName' : undefined"
+              :aria-describedby="fieldErrors.firstName ? errorId('firstName') : undefined"
               @input="clearFieldError('firstName')"
             >
-            <span v-if="fieldErrors.firstName" id="err-firstName" class="field-error" role="alert">{{ fieldErrors.firstName }}</span>
+            <span v-if="fieldErrors.firstName" :id="errorId('firstName')" class="field-error" role="alert">{{ fieldErrors.firstName }}</span>
           </label>
           <label>{{ formCopy.lastNameLabel }}*
             <input
@@ -102,10 +106,10 @@ async function submit(event: Event) {
               required
               autocomplete="family-name"
               :aria-invalid="!!fieldErrors.lastName"
-              :aria-describedby="fieldErrors.lastName ? 'err-lastName' : undefined"
+              :aria-describedby="fieldErrors.lastName ? errorId('lastName') : undefined"
               @input="clearFieldError('lastName')"
             >
-            <span v-if="fieldErrors.lastName" id="err-lastName" class="field-error" role="alert">{{ fieldErrors.lastName }}</span>
+            <span v-if="fieldErrors.lastName" :id="errorId('lastName')" class="field-error" role="alert">{{ fieldErrors.lastName }}</span>
           </label>
         </div>
         <label>{{ formCopy.emailLabel }}*
@@ -115,20 +119,20 @@ async function submit(event: Event) {
             required
             autocomplete="email"
             :aria-invalid="!!fieldErrors.email"
-            :aria-describedby="fieldErrors.email ? 'err-email' : undefined"
+            :aria-describedby="fieldErrors.email ? errorId('email') : undefined"
             @input="clearFieldError('email')"
           >
-          <span v-if="fieldErrors.email" id="err-email" class="field-error" role="alert">{{ fieldErrors.email }}</span>
+          <span v-if="fieldErrors.email" :id="errorId('email')" class="field-error" role="alert">{{ fieldErrors.email }}</span>
         </label>
         <label>{{ formCopy.subjectLabel }}*
           <input
             v-model="form.subject"
             required
             :aria-invalid="!!fieldErrors.subject"
-            :aria-describedby="fieldErrors.subject ? 'err-subject' : undefined"
+            :aria-describedby="fieldErrors.subject ? errorId('subject') : undefined"
             @input="clearFieldError('subject')"
           >
-          <span v-if="fieldErrors.subject" id="err-subject" class="field-error" role="alert">{{ fieldErrors.subject }}</span>
+          <span v-if="fieldErrors.subject" :id="errorId('subject')" class="field-error" role="alert">{{ fieldErrors.subject }}</span>
         </label>
         <label>{{ formCopy.messageLabel }}*
           <textarea
@@ -136,10 +140,10 @@ async function submit(event: Event) {
             rows="6"
             required
             :aria-invalid="!!fieldErrors.message"
-            :aria-describedby="fieldErrors.message ? 'err-message' : undefined"
+            :aria-describedby="fieldErrors.message ? errorId('message') : undefined"
             @input="clearFieldError('message')"
           />
-          <span v-if="fieldErrors.message" id="err-message" class="field-error" role="alert">{{ fieldErrors.message }}</span>
+          <span v-if="fieldErrors.message" :id="errorId('message')" class="field-error" role="alert">{{ fieldErrors.message }}</span>
         </label>
         <input v-model="form.website" type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn submit" :disabled="state === 'sending'">

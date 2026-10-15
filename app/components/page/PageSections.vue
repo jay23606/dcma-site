@@ -39,7 +39,7 @@ defineProps<{
 
     <HomeActivityGrid
       v-else-if="section._type === 'cardGridSection'"
-      :heading="section.heading || ''"
+      :heading="section.heading"
       :activities="section.cards"
       :email="settings.email"
     />

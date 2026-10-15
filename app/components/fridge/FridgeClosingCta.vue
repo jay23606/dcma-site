@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Cta } from '~/types/content'
+const headingId = useId()
 defineProps<{ heading: string; note: string; cta: Cta; secondaryCta?: Cta }>()
 </script>
 
 <template>
-  <section class="closing" aria-labelledby="closing-heading">
-    <h2 id="closing-heading" class="display">{{ heading }}</h2>
+  <section class="closing" :aria-labelledby="headingId">
+    <h2 :id="headingId" class="display">{{ heading }}</h2>
     <p class="note">{{ note }}</p>
     <div class="actions">
       <a class="btn" :href="cta.href" v-bind="linkTarget(cta.href)">{{ cta.label }}</a>

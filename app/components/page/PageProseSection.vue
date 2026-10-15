@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="prose" :aria-labelledby="headingId">
+  <section class="prose" :aria-labelledby="heading ? headingId : undefined">
     <p v-if="eyebrow" class="eyebrow">{{ eyebrow }}</p>
     <h2 v-if="heading" :id="headingId" class="display section-heading">{{ heading }}</h2>
     <p v-if="body" class="body">{{ body }}</p>
