@@ -6,25 +6,6 @@ useSeoMeta({
   description: () => page.value?.seo.description,
 })
 
-// The sections are collapsed <details>. A deep link like /about#security
-// scrolls to the section but leaves it shut — open it (and re-scroll, since
-// expanding shifts the layout).
-function openHashSection() {
-  const id = window.location.hash.slice(1)
-  if (!id) return
-  const el = document.getElementById(id)
-  if (el instanceof HTMLDetailsElement && !el.open) {
-    el.open = true
-    el.scrollIntoView({ block: 'start' })
-  }
-}
-
-onMounted(() => {
-  openHashSection()
-  window.addEventListener('hashchange', openHashSection)
-})
-
-onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
 </script>
 
 <template>
@@ -37,104 +18,64 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
     </header>
 
     <div class="cards-wrapper">
-      <details id="introduction" class="section-card" open>
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.introductionHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body prose">
+      <AboutSectionCard id="introduction" :title="page.introductionHeading" default-open>
+        <div class="prose">
           <p v-for="(paragraph, i) in page.introductionParagraphs" :key="i">{{ paragraph }}</p>
         </div>
-      </details>
+      </AboutSectionCard>
 
-      <details id="mission" class="section-card mission-card" open>
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.missionTitle }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <p class="mission-body">{{ page.missionBody }}</p>
+      <AboutSectionCard id="mission" :title="page.missionTitle" default-open class="mission-card">
+        <p class="mission-body">{{ page.missionBody }}</p>
+      </AboutSectionCard>
+
+      <AboutSectionCard id="principles" :title="page.principlesHeading">
+        <p class="section-intro">{{ page.principlesIntro }}</p>
+        <div class="principle-grid">
+          <article v-for="principle in page.principles" :key="principle.title" class="principle-card">
+            <h3>{{ principle.title }}</h3>
+            <p>{{ principle.body }}</p>
+          </article>
         </div>
-      </details>
+      </AboutSectionCard>
 
-      <details id="principles" class="section-card">
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.principlesHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <p class="section-intro">{{ page.principlesIntro }}</p>
-          <div class="principle-grid">
-            <article v-for="principle in page.principles" :key="principle.title" class="principle-card">
-              <h3>{{ principle.title }}</h3>
-              <p>{{ principle.body }}</p>
-            </article>
+      <AboutSectionCard id="norms-tldr" :title="page.shortNormsHeading">
+        <p class="section-intro">{{ page.shortNormsIntro }}</p>
+        <ul class="norms-tldr">
+          <li v-for="norm in page.shortNorms" :key="norm">{{ norm }}</li>
+        </ul>
+      </AboutSectionCard>
+
+      <AboutSectionCard id="collective-norms" :title="page.collectiveNormsHeading">
+        <p class="section-intro">{{ page.collectiveNormsIntro }}</p>
+        <dl class="norm-list">
+          <div v-for="norm in page.collectiveNorms" :key="norm.title" class="norm-item">
+            <dt>{{ norm.title }}</dt>
+            <dd>{{ norm.body }}</dd>
           </div>
-        </div>
-      </details>
+        </dl>
+      </AboutSectionCard>
 
-      <details id="norms-tldr" class="section-card">
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.shortNormsHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <p class="section-intro">{{ page.shortNormsIntro }}</p>
-          <ul class="norms-tldr">
-            <li v-for="norm in page.shortNorms" :key="norm">{{ norm }}</li>
-          </ul>
-        </div>
-      </details>
+      <AboutSectionCard id="security" :title="page.securityHeading">
+        <p class="section-intro">{{ page.securityIntro }}</p>
+        <aside class="callout" aria-label="Security norms summary">
+          <p class="callout-label">TLDR</p>
+          <p>{{ page.securityTldr }}</p>
+        </aside>
+        <p>{{ page.securityContext }}</p>
+        <ul class="bullet-list">
+          <li v-for="item in page.securityItems" :key="item">{{ item }}</li>
+        </ul>
+        <h3 class="subsection-heading">{{ page.securityConfrontationalHeading }}</h3>
+        <ul class="bullet-list">
+          <li v-for="item in page.securityConfrontationalItems" :key="item">{{ item }}</li>
+        </ul>
+      </AboutSectionCard>
 
-      <details id="collective-norms" class="section-card">
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.collectiveNormsHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <p class="section-intro">{{ page.collectiveNormsIntro }}</p>
-          <dl class="norm-list">
-            <div v-for="norm in page.collectiveNorms" :key="norm.title" class="norm-item">
-              <dt>{{ norm.title }}</dt>
-              <dd>{{ norm.body }}</dd>
-            </div>
-          </dl>
-        </div>
-      </details>
-
-      <details id="security" class="section-card">
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.securityHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <p class="section-intro">{{ page.securityIntro }}</p>
-          <aside class="callout" aria-label="Security norms summary">
-            <p class="callout-label">TLDR</p>
-            <p>{{ page.securityTldr }}</p>
-          </aside>
-          <p>{{ page.securityContext }}</p>
-          <ul class="bullet-list">
-            <li v-for="item in page.securityItems" :key="item">{{ item }}</li>
-          </ul>
-          <h3 class="subsection-heading">{{ page.securityConfrontationalHeading }}</h3>
-          <ul class="bullet-list">
-            <li v-for="item in page.securityConfrontationalItems" :key="item">{{ item }}</li>
-          </ul>
-        </div>
-      </details>
-
-      <details id="security-meetings" class="section-card">
-        <summary class="card-summary">
-          <h2 class="card-title display">{{ page.securityMeetingsHeading }}</h2>
-          <span class="card-chevron" aria-hidden="true" />
-        </summary>
-        <div class="card-body">
-          <ul class="bullet-list">
-            <li v-for="item in page.securityMeetingItems" :key="item">{{ item }}</li>
-          </ul>
-        </div>
-      </details>
+      <AboutSectionCard id="security-meetings" :title="page.securityMeetingsHeading">
+        <ul class="bullet-list">
+          <li v-for="item in page.securityMeetingItems" :key="item">{{ item }}</li>
+        </ul>
+      </AboutSectionCard>
     </div>
   </main>
 </template>
@@ -182,72 +123,6 @@ onUnmounted(() => window.removeEventListener('hashchange', openHashSection))
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-}
-
-.section-card {
-  border: 1px solid var(--hairline);
-  background: var(--surface-raised);
-}
-
-.section-card[open] {
-  border-color: color-mix(in oklab, var(--navy) 25%, transparent);
-}
-
-.card-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-}
-
-.card-summary::-webkit-details-marker {
-  display: none;
-}
-
-.card-summary:hover {
-  background: color-mix(in oklab, var(--periwinkle) 40%, transparent);
-}
-
-.card-title {
-  margin: 0;
-  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-  font-weight: 900;
-  line-height: 1.15;
-  text-wrap: balance;
-}
-
-.card-chevron {
-  flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-right: 2.5px solid var(--navy);
-  border-bottom: 2.5px solid var(--navy);
-  transform: rotate(45deg);
-  transition: transform 0.2s ease;
-  margin-top: -0.35rem;
-}
-
-details[open] .card-chevron {
-  transform: rotate(-135deg);
-  margin-top: 0.35rem;
-}
-
-.card-body {
-  padding: 0 1.5rem 1.5rem;
-}
-
-/* ── Mission card variant ── */
-.mission-card {
-  background: var(--periwinkle);
-  border-color: color-mix(in oklab, var(--navy) 15%, transparent);
-}
-
-.mission-card .card-summary:hover {
-  background: color-mix(in oklab, var(--periwinkle) 70%, transparent);
 }
 
 .mission-body {
