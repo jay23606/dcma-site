@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const headingId = useId()
+
 defineProps<{
   eyebrow?: string
   heading?: string
@@ -7,9 +9,9 @@ defineProps<{
 </script>
 
 <template>
-  <section class="prose" aria-labelledby="prose-heading">
+  <section class="prose" :aria-labelledby="heading ? headingId : undefined">
     <p v-if="eyebrow" class="eyebrow">{{ eyebrow }}</p>
-    <h2 v-if="heading" id="prose-heading" class="display section-heading">{{ heading }}</h2>
+    <h2 v-if="heading" :id="headingId" class="display section-heading">{{ heading }}</h2>
     <p v-if="body" class="body">{{ body }}</p>
   </section>
 </template>

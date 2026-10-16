@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const headingId = useId()
+
 defineProps<{
   eyebrow?: string
   heading: string
@@ -13,7 +15,7 @@ defineProps<{
   <section
     class="split"
     :class="{ reverse: imagePosition === 'right' && imageUrl }"
-    aria-labelledby="split-heading"
+    :aria-labelledby="headingId"
   >
     <div v-if="imageUrl" class="media">
       <img
@@ -25,7 +27,7 @@ defineProps<{
     </div>
     <div class="copy">
       <p v-if="eyebrow" class="eyebrow">{{ eyebrow }}</p>
-      <h2 id="split-heading" class="display">{{ heading }}</h2>
+      <h2 :id="headingId" class="display">{{ heading }}</h2>
       <p v-if="body" class="body">{{ body }}</p>
     </div>
   </section>

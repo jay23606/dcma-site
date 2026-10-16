@@ -39,15 +39,15 @@ defineProps<{
 
     <HomeActivityGrid
       v-else-if="section._type === 'cardGridSection'"
-      :heading="section.heading || ''"
+      :heading="section.heading"
       :activities="section.cards"
       :email="settings.email"
     />
 
     <FridgeClosingCta
       v-else-if="section._type === 'ctaSection'"
-      :heading="section.heading || ''"
-      :note="section.note || ''"
+      :heading="section.heading"
+      :note="section.note"
       :cta="section.cta"
       :secondary-cta="section.secondaryCta"
     />
