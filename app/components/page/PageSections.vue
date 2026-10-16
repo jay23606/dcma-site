@@ -46,8 +46,8 @@ defineProps<{
 
     <FridgeClosingCta
       v-else-if="section._type === 'ctaSection'"
-      :heading="section.heading || ''"
-      :note="section.note || ''"
+      :heading="section.heading"
+      :note="section.note"
       :cta="section.cta"
       :secondary-cta="section.secondaryCta"
     />

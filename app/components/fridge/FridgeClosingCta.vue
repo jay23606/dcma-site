@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Cta } from '~/types/content'
 const headingId = useId()
-defineProps<{ heading: string; note: string; cta: Cta; secondaryCta?: Cta }>()
+defineProps<{ heading?: string; note?: string; cta: Cta; secondaryCta?: Cta }>()
 </script>
 
 <template>
-  <section class="closing" :aria-labelledby="headingId">
-    <h2 :id="headingId" class="display">{{ heading }}</h2>
-    <p class="note">{{ note }}</p>
+  <section class="closing" :aria-labelledby="heading ? headingId : undefined">
+    <h2 v-if="heading" :id="headingId" class="display">{{ heading }}</h2>
+    <p v-if="note" class="note">{{ note }}</p>
     <div class="actions">
       <a class="btn" :href="cta.href" v-bind="linkTarget(cta.href)">{{ cta.label }}</a>
       <a v-if="secondaryCta" class="btn btn-outline" :href="secondaryCta.href" v-bind="linkTarget(secondaryCta.href)">{{ secondaryCta.label }}</a>

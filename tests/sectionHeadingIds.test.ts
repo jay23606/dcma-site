@@ -45,6 +45,7 @@ describe('section heading IDs', () => {
           <ContactSection heading="Second contact" :form-copy="contactProps.formCopy" :settings="settings" />
           <FridgeClosingCta heading="First closing" note="n" :cta="{ label: 'Go', href: '/a' }" />
           <FridgeClosingCta heading="Second closing" note="n" :cta="{ label: 'Go', href: '/b' }" />
+          <FridgeClosingCta note="n" :cta="{ label: 'Go', href: '/c' }" />
         </div>
       `,
     })
@@ -85,5 +86,11 @@ describe('section heading IDs', () => {
     const grid = mount(HomeActivityGrid, { props: { activities: [], email: 'x@example.test' } })
     expect(grid.attributes('aria-labelledby')).toBeUndefined()
     expect(grid.find('h2').exists()).toBe(false)
+
+    const cta = mount(FridgeClosingCta, {
+      props: { note: 'Just a note', cta: { label: 'Go', href: '/c' } },
+    })
+    expect(cta.attributes('aria-labelledby')).toBeUndefined()
+    expect(cta.find('h2').exists()).toBe(false)
   })
 })
