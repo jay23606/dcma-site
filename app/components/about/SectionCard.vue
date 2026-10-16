@@ -75,6 +75,11 @@ onUnmounted(() => window.removeEventListener('hashchange', openIfLinked))
   background: color-mix(in oklab, var(--periwinkle) 40%, transparent);
 }
 
+.card-summary:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: -3px;
+}
+
 .card-title {
   margin: 0;
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 const { data: page } = await useAboutPage()
 
+// Without JavaScript the toggles do nothing, so show every section body. The
+// v-show inline style is overridden here, and the toggle icons are hidden.
+useHead({
+  noscript: [{ innerHTML: '<style>.section-card .card-body{display:block!important}.section-card .card-chevron{display:none}</style>' }],
+})
+
 useSeoMeta({
   title: () => page.value?.seo.title,
   description: () => page.value?.seo.description,
