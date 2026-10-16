@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export default defineType({
   name: 'homePage',
@@ -7,12 +8,12 @@ export default defineType({
   fields: [
     defineField({ name: 'heroHeading', type: 'string' }),
     defineField({ name: 'heroTagline', type: 'string' }),
-    defineField({ name: 'heroImage', type: 'image', description: 'DCMA handprint' }),
+    imageField({ name: 'heroImage', description: 'DCMA handprint' }),
     defineField({ name: 'heroCta', type: 'cta' }),
     defineField({ name: 'missionEyebrow', type: 'string' }),
     defineField({ name: 'missionHeading', type: 'string' }),
     defineField({ name: 'missionBody', type: 'text' }),
-    defineField({ name: 'missionImage', type: 'image', options: { hotspot: true } }),
+    imageField({ name: 'missionImage', options: { hotspot: true } }),
     defineField({ name: 'activitiesHeading', type: 'string', title: 'Activities section heading' }),
     defineField({ name: 'activities', type: 'array', of: [{ type: 'card' }] }),
     defineField({ name: 'contactHeading', type: 'string' }),

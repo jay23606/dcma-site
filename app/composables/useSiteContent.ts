@@ -8,10 +8,14 @@ export const SITE_SETTINGS_QUERY = /* groq */ `*[_id == "siteSettings"][0]{
   errorPage,
   fridgeShell }`
 
+// Alt text for an image field. Decorative images, and images missing alt text,
+// get "" instead of a nearby heading, which screen readers would hear twice.
+const altText = (image: string) => /* groq */ `select(${image}.decorative == true => "", coalesce(${image}.alt, ""))`
+
 const cardFields = /* groq */ `
   _key, title, body, cta,
   "imageUrl": image.asset->url,
-  "imageAlt": image.alt
+  "imageAlt": ${altText('image')}
 `
 
 const sectionFields = /* groq */ `
@@ -19,12 +23,12 @@ const sectionFields = /* groq */ `
   _type == "heroSection" => {
     heading, tagline, cta, secondaryCta,
     "imageUrl": image.asset->url,
-    "imageAlt": coalesce(image.alt, heading)
+    "imageAlt": ${altText('image')}
   },
   _type == "splitSection" => {
     eyebrow, heading, body, imagePosition,
     "imageUrl": image.asset->url,
-    "imageAlt": coalesce(image.alt, heading)
+    "imageAlt": ${altText('image')}
   },
   _type == "proseSection" => {
     eyebrow, heading, body
@@ -44,18 +48,18 @@ const sectionFields = /* groq */ `
 export const HOME_QUERY = /* groq */ `*[_id == "homePage"][0]{
   heroHeading, heroTagline,
   "heroImageUrl": heroImage.asset->url,
-  "heroImageAlt": coalesce(heroImage.alt, heroHeading),
+  "heroImageAlt": ${altText('heroImage')},
   heroCta,
   missionEyebrow, missionHeading, missionBody,
   "missionImageUrl": missionImage.asset->url,
-  "missionImageAlt": coalesce(missionImage.alt, missionHeading), activitiesHeading,
+  "missionImageAlt": ${altText('missionImage')}, activitiesHeading,
   activities[]{${cardFields}},
   contactHeading, contactForm, seo }`
 
 export const FRIDGE_QUERY = /* groq */ `*[_id == "fridgePage"][0]{
   heading, intro,
   "heroImageUrl": heroImage.asset->url,
-  "heroImageAlt": heroImage.alt,
+  "heroImageAlt": ${altText('heroImage')},
   cta,
   findHeading, locationAddress, locationHours, pickupNote, mapUrl, mapButtonLabel,
   donationHeading, donationGuidelines, donationCta,
@@ -104,14 +108,14 @@ export const UPDATES_QUERY = /* groq */ `*[_type == "update"] | order(publishedA
   _id, title, "slug": slug.current,
   publishedAt, category, summary,
   "imageUrl": image.asset->url,
-  "imageAlt": coalesce(image.alt, title),
+  "imageAlt": ${altText('image')},
   cta }`
 
 export const LATEST_UPDATE_QUERY = /* groq */ `*[_type == "update"] | order(publishedAt desc) [0] {
   _id, title, "slug": slug.current,
   publishedAt, category, summary,
   "imageUrl": image.asset->url,
-  "imageAlt": coalesce(image.alt, title),
+  "imageAlt": ${altText('image')},
   cta }`
 
 async function withNormalizedData<T>(

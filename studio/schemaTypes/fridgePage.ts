@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export default defineType({
   name: 'fridgePage',
@@ -7,7 +8,7 @@ export default defineType({
   fields: [
     defineField({ name: 'heading', type: 'string' }),
     defineField({ name: 'intro', type: 'text' }),
-    defineField({ name: 'heroImage', type: 'image', options: { hotspot: true } }),
+    imageField({ name: 'heroImage', options: { hotspot: true } }),
     defineField({ name: 'cta', type: 'cta' }),
     defineField({ name: 'findHeading', type: 'string', title: 'Find the fridge heading' }),
     defineField({ name: 'locationAddress', type: 'text', rows: 2 }),

@@ -24,14 +24,14 @@ function formatDate(iso: string) {
       :heading="page.heroHeading"
       :tagline="page.heroTagline"
       :image-url="page.heroImageUrl"
-      :image-alt="page.heroImageAlt || page.heroHeading"
+      :image-alt="page.heroImageAlt"
       :cta="page.heroCta"
     />
     <section class="mission">
       <div v-if="page.missionImageUrl" class="mission-media">
         <img
           :src="page.missionImageUrl"
-          :alt="page.missionImageAlt || page.missionHeading"
+          :alt="page.missionImageAlt ?? ''"
           loading="lazy"
           class="mission-photo"
         >

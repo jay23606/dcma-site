@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export const heroSection = defineType({
   name: 'heroSection',
@@ -7,7 +8,7 @@ export const heroSection = defineType({
   fields: [
     defineField({ name: 'heading', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'tagline', type: 'string' }),
-    defineField({ name: 'image', type: 'image' }),
+    imageField({ name: 'image' }),
     defineField({ name: 'cta', type: 'cta' }),
     defineField({ name: 'secondaryCta', type: 'cta' }),
   ],
@@ -27,7 +28,7 @@ export const splitSection = defineType({
     defineField({ name: 'eyebrow', type: 'string' }),
     defineField({ name: 'heading', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'body', type: 'text', rows: 6 }),
-    defineField({ name: 'image', type: 'image', options: { hotspot: true } }),
+    imageField({ name: 'image', options: { hotspot: true } }),
     defineField({
       name: 'imagePosition',
       type: 'string',

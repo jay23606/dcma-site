@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export const navLink = defineType({
   name: 'navLink',
@@ -83,7 +84,7 @@ export const card = defineType({
   fields: [
     defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'body', type: 'text', rows: 3 }),
-    defineField({ name: 'image', type: 'image', options: { hotspot: true } }),
+    imageField({ name: 'image', options: { hotspot: true } }),
     defineField({ name: 'cta', type: 'cta' }),
   ],
 })

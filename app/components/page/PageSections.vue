@@ -15,7 +15,7 @@ defineProps<{
       :heading="section.heading"
       :tagline="section.tagline"
       :image-url="section.imageUrl"
-      :image-alt="section.imageAlt || section.heading"
+      :image-alt="section.imageAlt"
       :cta="section.cta"
       :secondary-cta="section.secondaryCta"
     />
@@ -26,7 +26,7 @@ defineProps<{
       :heading="section.heading"
       :body="section.body"
       :image-url="section.imageUrl"
-      :image-alt="section.imageAlt || section.heading"
+      :image-alt="section.imageAlt"
       :image-position="section.imagePosition"
     />
 

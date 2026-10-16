@@ -176,8 +176,9 @@ Singleton documents (Site Settings, Home, Fridge, About, What Is Mutual Aid, Upd
 
 1. Click the image field in any document.
 2. Upload a new file or select from the media library.
-3. Fill in **Alt text** when the field is available (important for accessibility).
-4. Publish the document.
+3. Fill in **Alt text**: describe what the image shows for someone who can't see it, without repeating the nearby heading. The Studio won't publish an image without alt text.
+4. If the image adds no information (a background pattern, a purely decorative flourish), turn on **Decorative image** instead. The site then gives it empty alt text so screen readers skip it.
+5. Publish the document.
 
 ### Review contact form messages
 
