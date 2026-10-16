@@ -12,7 +12,7 @@ defineProps<{ heading?: string; activities: Card[]; email: string; }>()
         <img
           v-if="a.imageUrl"
           :src="a.imageUrl"
-          :alt="a.imageAlt || a.title"
+          :alt="a.imageAlt ?? ''"
           loading="lazy"
           class="photo"
         >

@@ -55,7 +55,7 @@ const errorMailto = computed(() => {
           <img
             v-if="page.heroImageUrl && !heroBroken"
             :src="page.heroImageUrl"
-            :alt="page.heroImageAlt || ''"
+            :alt="page.heroImageAlt ?? ''"
             fetchpriority="high"
             loading="eager"
             width="800"

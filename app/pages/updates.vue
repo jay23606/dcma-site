@@ -80,7 +80,7 @@ function datePart(iso: string, opt: Intl.DateTimeFormatOptions) {
             <div v-if="update.imageUrl" class="card-media">
               <img
                 :src="update.imageUrl"
-                :alt="update.imageAlt || update.title"
+                :alt="update.imageAlt ?? ''"
                 loading="lazy"
                 class="card-img"
               >

@@ -16,7 +16,7 @@ defineProps<{
     <img
       v-if="imageUrl"
       :src="imageUrl"
-      :alt="imageAlt || heading"
+      :alt="imageAlt ?? ''"
       class="hand"
     >
     <div class="copy">

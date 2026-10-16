@@ -20,7 +20,7 @@ defineProps<{
     <div v-if="imageUrl" class="media">
       <img
         :src="imageUrl"
-        :alt="imageAlt || heading"
+        :alt="imageAlt ?? ''"
         loading="lazy"
         class="photo"
       >

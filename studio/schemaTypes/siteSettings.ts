@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export default defineType({
   name: 'siteSettings',
@@ -6,7 +7,7 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({ name: 'orgName', type: 'string' }),
-    defineField({ name: 'logo', type: 'image' }),
+    imageField({ name: 'logo' }),
     defineField({ name: 'email', type: 'string' }),
     defineField({ name: 'facebookUrl', type: 'url' }),
     defineField({ name: 'meetingNote', type: 'string' }),

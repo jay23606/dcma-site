@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageField } from './imageField'
 
 export default defineType({
   name: 'update',
@@ -40,12 +41,7 @@ export default defineType({
       rows: 3,
       validation: r => r.required(),
     }),
-    defineField({
-      name: 'image',
-      type: 'image',
-      options: { hotspot: true },
-      fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
-    }),
+    imageField({ name: 'image', options: { hotspot: true } }),
     defineField({ name: 'cta', type: 'cta' }),
   ],
   orderings: [
